@@ -1,0 +1,73 @@
+{
+  "name": "theglue-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "config": {
+    "version": "latest",
+    "dockerHost": "localhost"
+  },
+  "dependencies": {
+    "axios": "^0.17.0",
+    "core-js": "^2.5.1",
+    "i18next": "^10.0.7",
+    "i18next-browser-languagedetector": "^2.1.0",
+    "moment": "^2.19.2",
+    "query-string": "^5.0.1",
+    "react": "^16.0.0",
+    "react-datepicker": "^0.61.0",
+    "react-dom": "^16.0.0",
+    "react-i18next": "^6.1.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "^1.0.16",
+    "redux": "^3.7.2",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.75.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "coverage": "yarn test --coverage",
+    "eject": "react-scripts eject",
+    "flow": "flow",
+    "bDI": "docker-compose -f ./docker/docker-compose.yml build",
+    "dCD": "docker-compose -f ./docker/docker-compose.yml down",
+    "dCU": "yarn dCD && docker-compose -f ./docker/docker-compose.yml up -d",
+    "launch": "x-www-browser http://localhost/",
+    "test:ci": "yarn test --testResultsProcessor ./node_modules/jest-junit",
+    "run:prod:build": "docker build -t docker.artifacts.theglue.com/com.theglue/theglue-dashboard:latest -f ./docker/nginx/prod.dockerfile .",
+    "run:prod": "yarn run:prod:build && docker run -d -p 80:80 --network=theglueframeworksmoketest_default --link framework-request-handler:api docker.artifacts.theglue.com/com.theglue/theglue-dashboard:latest"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.9.0",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.2",
+    "flow-bin": "^0.57.3",
+    "jest-cli": "^21.2.1",
+    "jest-enzyme": "^4.0.1",
+    "jest-junit": "^3.1.0",
+    "react-test-renderer": "^16.0.0"
+  },
+  "jest": {
+    "coverageReporters": [
+      "lcov",
+      "text"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js",
+      "!src/registerServiceWorker.js",
+      "!src/setupTests.js",
+      "!src/tempRequestAnimationPolyfill.js"
+    ]
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "output": "test-results/junit.xml",
+    "classNameTemplate": "{classname} - {title}",
+    "titleTemplate": "{classname} - {title}",
+    "ancestorSeparator": " > ",
+    "usePathForSuiteName": "true"
+  }
+}
