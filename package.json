@@ -1,5 +1,5 @@
 {
-  "name": "theglue-dashboard",
+  "name": "evolve",
   "version": "0.1.0",
   "private": true,
   "config": {
@@ -7,7 +7,7 @@
     "dockerHost": "localhost"
   },
   "dependencies": {
-    "axios": "^0.17.0",
+    "axios": "^0.17.1",
     "core-js": "^2.5.1",
     "i18next": "^10.0.7",
     "i18next-browser-languagedetector": "^2.1.0",
@@ -35,9 +35,7 @@
     "dCD": "docker-compose -f ./docker/docker-compose.yml down",
     "dCU": "yarn dCD && docker-compose -f ./docker/docker-compose.yml up -d",
     "launch": "x-www-browser http://localhost/",
-    "test:ci": "yarn test --testResultsProcessor ./node_modules/jest-junit",
-    "run:prod:build": "docker build -t docker.artifacts.theglue.com/com.theglue/theglue-dashboard:latest -f ./docker/nginx/prod.dockerfile .",
-    "run:prod": "yarn run:prod:build && docker run -d -p 80:80 --network=theglueframeworksmoketest_default --link framework-request-handler:api docker.artifacts.theglue.com/com.theglue/theglue-dashboard:latest"
+    "test:ci": "yarn test --testResultsProcessor ./node_modules/jest-junit"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.9.0",
