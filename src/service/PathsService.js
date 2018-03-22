@@ -1,11 +1,9 @@
-import api from '../api.'
+import api from '../api'
 
 export const pathsService = {
     getPaths: async () => {
-        const response = await api.post('', {})
+        const response = await api.get('/paths')
     
-        console.log(response)
-
-        return response
+        return response.data
       },
 }
