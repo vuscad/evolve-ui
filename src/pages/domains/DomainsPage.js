@@ -1,7 +1,9 @@
 // @flow
 import React, { Component } from 'react'
-import { Table, Modal, Button, Header, Icon, Label, Input, Segment } from 'semantic-ui-react'
+import { Table, Modal, Button, Header, Icon } from 'semantic-ui-react'
 import { domainsService } from '../../service/DomainsService'
+import DomainsModal from './components/DomainsModal'
+import DeleteModal from '../common/DeleteModal'
 
 const State = {
   domains: Array
@@ -13,113 +15,70 @@ class DomainsPage extends Component<{}, State> {
   }
 
   componentDidMount = async () => {
+    this.reload()
+  }
+
+  reload = async () => {
     const domains = await domainsService.getDomains()
 
     this.setState({ domains })
   }
 
-  editYesCliked = (event) => {
-    console.log(event)
-  }
+  onDelete = async (id) => {
+    await domainsService.deleteDomain(id)
 
-  editNoClicked = (event) => {
-    console.log(event)
+    this.reload()
   }
 
   render = () => {
       
     return (
-      <Table celled striped fixed>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell width={ 4 }>
-              ID
-            </Table.HeaderCell>
+      <div>
+        <DomainsModal domain={ {} } title='Add modal' icon='add' reload={ this.reload }/>
+        <Table celled striped fixed>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell width={ 4 }>
+                ID
+              </Table.HeaderCell>
 
-            <Table.HeaderCell width={ 4 }>
-              Name
-            </Table.HeaderCell>
+              <Table.HeaderCell width={ 4 }>
+                Name
+              </Table.HeaderCell>
 
-            <Table.HeaderCell width={ 4 }>
-              Tasks
-            </Table.HeaderCell>
+              <Table.HeaderCell width={ 4 }>
+                Tasks
+              </Table.HeaderCell>
 
-            <Table.HeaderCell width={ 4 }>
-              More
-            </Table.HeaderCell>
+              <Table.HeaderCell width={ 4 }>
+                More
+              </Table.HeaderCell>
 
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-        {
-          this.state.domains.map(domain => 
-            <Table.Row> 
-              <Table.Cell>
-                { domain.id }
-              </Table.Cell>
-              <Table.Cell>
-                { domain.name }
-              </Table.Cell>
-              <Table.Cell>
-                { domain.tasks.join(',') }
-              </Table.Cell>
-              <Table.Cell>
-                <Modal 
-                dimmer='blurring' 
-                trigger={<Button color='green' icon='add'></Button>} 
-                closeIcon
-                closeOnRootNodeClick
-                >
-                  <Header icon='add' content='Add Domain' />
-                  <Modal.Content>
-                    <Label size='large'>Name</Label>
-                    <Input></Input>
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button basic color='red'>
-                      <Icon name='remove' /> No
-                    </Button>
-                    <Button color='green'>
-                      <Icon name='checkmark' /> Yes
-                    </Button>
-                  </Modal.Actions>
-                </Modal>
-
-                <Modal dimmer='blurring' trigger={<Button color='yellow' icon='edit'></Button>} size='small'>
-                  <Header icon='edit' content='Add Domain' />
-                  <Modal.Content>
-                    <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button basic color='red' onClick={ () => this.editNoClicked }>
-                      <Icon name='remove' /> No
-                    </Button>
-                    <Button color='green' onClick={ () => this.editYesCliked }>
-                      <Icon name='checkmark' /> Yes
-                    </Button>
-                  </Modal.Actions>
-                </Modal>
-
-                <Modal dimmer='blurring' trigger={<Button color='red' icon='delete'></Button>} size='small'>
-                  <Header icon='delete' content='Delete domain' />
-                  <Modal.Content>
-                    <p>Are you sure you want to delete the domain?</p>
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button basic color='red'>
-                      <Icon name='remove' /> No
-                    </Button>
-                    <Button color='green'>
-                      <Icon name='checkmark' /> Yes
-                    </Button>
-                  </Modal.Actions>
-                </Modal>
-              </Table.Cell>
             </Table.Row>
-          )
-        }
-        </Table.Body>
-      </Table>
+          </Table.Header>
+          <Table.Body>
+          {
+            this.state.domains.map((domain, index) => 
+              <Table.Row key={ index }> 
+                <Table.Cell>
+                  { domain.id }
+                </Table.Cell>
+                <Table.Cell>
+                  { domain.name }
+                </Table.Cell>
+                <Table.Cell>
+                  { domain.tasks.map(task => JSON.stringify(task)).join(',') }
+                </Table.Cell>
+                <Table.Cell>
+                  <DomainsModal domain={ domain } title='Edit modal' icon='edit' reload={ this.reload }/>
+                  <DeleteModal id={ domain.id } delete={ this.onDelete }/>
+                </Table.Cell>
+              </Table.Row>
+            )
+          }
+          </Table.Body>
+        </Table>
+      </div>
     )
   }
 }

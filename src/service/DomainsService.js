@@ -14,7 +14,7 @@ export const domainsService = {
     },
 
     createDomain: async (domain) => {
-      await api.post('/domains', domain)
+      await api.post('/domain', domain)
     },
 
     deleteDomain: async (id) => {

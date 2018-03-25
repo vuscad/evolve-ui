@@ -1,73 +1,69 @@
 // @flow
 import React, { Component } from 'react'
 import { Grid, Modal, Button, Icon, Header, Dropdown, Label, Input } from 'semantic-ui-react'
-import { tasksService } from '../../../service/TasksService'
 import { domainsService } from '../../../service/DomainsService'
+import { pathsService } from '../../../service/PathsService'
 
 const State = {
-  tasks: Array,
-  selectedTasks: Array,
+  domains: Array,
+  selectedDomains: Array,
   name: String,
   modalOpen: Boolean
 }
 
 const Props = {
-  domain: Object,
+  path: Object,
   icon: String,
   title: String,
   reload: Function
 }
 
-class DomainsModal extends Component<Props, State> {
+class PathsModal extends Component<Props, State> {
   state = {
-    tasks: [],
-    selectedTasks: [],
+    domains: [],
+    selectedDomains: [],
     name: '',
     modalOpen: false
   }
 
   componentWillMount = async () => {
-    var selectedTasks = []
+    var selectedDomains = []
     if (this.props.icon === 'edit') {
-    selectedTasks = this.props.domain.tasks.map((task, index) => { 
-      console.log(this.props.domain.id + '  ' + JSON.stringify(this.props.domain))
-      console.log(this.props.domain.id + '  ' + JSON.stringify(task))
-      const name = task.name
+    selectedDomains = this.props.path.domains.map((domain, index) => { 
+      const name = domain.name
 
-      return { key: index, text: name, value: task }
+      return { key: index, text: name, value: domain }
     })
   }
 
-    const tasks = await tasksService.getTasks()
-    const tasksOptions = tasks.map((task, index) => { 
-      const name = task.name
+    const domains = await domainsService.getDomains()
+    const domainsOptions = domains.map((domain, index) => { 
+      const name = domain.name
 
-      return { key: index, text: name, value: task }
+      return { key: index, text: name, value: domain }
     })
 
-    this.setState({ selectedTasks, tasks: tasksOptions, name: this.props.domain.name })
+    this.setState({ selectedDomains, domains: domainsOptions, name: this.props.path.name })
   }
 
   onChange = (event, { value }) => {
-    const selectedTasks = value.map((task, index) => { 
-      const name = task.name
+    const selectedDomains = value.map((domain, index) => { 
+      const name = domain.name
 
-      return { key: index, text: name, value: task }
+      return { key: index, text: name, value: domain }
     })
-    this.setState({ selectedTasks })
+    this.setState({ selectedDomains })
   }
 
   onYesClicked = async () => {
-    const domain = this.props.domain
-    domain.name = this.state.name
-    domain.tasks = this.state.selectedTasks.map(task => task.value)
-    console.log(this.state.selectedTasks)
+    const path = this.props.path
+    path.name = this.state.name
+    path.domains = this.state.selectedDomains.map(domain => domain.value)
     
     if (this.props.icon === 'add') {
-      await domainsService.createDomain(domain)
+      await pathsService.createPath(path)
     } else {
-      console.log(domain)
-      await domainsService.updateDomain(domain)
+      await pathsService.updatePath(path)
     }
     
     this.props.reload()
@@ -88,11 +84,11 @@ class DomainsModal extends Component<Props, State> {
   }
 
   deleteAll = () => {
-    this.setState({ selectedTasks: [] })
+    this.setState({ selectedDomains: [] })
   }
 
   render = () => {
-    const { domain } = this.props
+    const { path } = this.props
 
     return (
         <Modal 
@@ -108,11 +104,11 @@ class DomainsModal extends Component<Props, State> {
               <Grid>
                 <Grid.Row>
                   <Label size='large'>Name</Label>
-                  <Input onChange={ this.onInputChange } defaultValue={ domain.name }/>
+                  <Input onChange={ this.onInputChange } defaultValue={ path.name }/>
                 </Grid.Row>
                 <Grid.Row>
-                  <Label size='large'>Tasks</Label>
-                  <Dropdown placeholder='Tasks' defaultValue={ this.state.selectedTasks.map(element => element.value) } multiple selection options={ this.state.tasks } onChange={ this.onChange }/>
+                  <Label size='large'>Domains</Label>
+                  <Dropdown placeholder='Domains' defaultValue={ this.state.selectedDomains.map(element => element.value) } multiple selection options={ this.state.domains } onChange={ this.onChange }/>
                   <Button color='red' onClick={ this.deleteAll }>Delete all !</Button>
                 </Grid.Row>
               </Grid>
@@ -131,4 +127,4 @@ class DomainsModal extends Component<Props, State> {
   }
 }
 
-export default DomainsModal
+export default PathsModal
