@@ -14,7 +14,7 @@ class PathsPage extends Component<{}, State> {
     paths: []
   }
 
-  componentDidMount = async () => {
+  componentWillMount = () => {
     this.reload()
   }
 
@@ -31,7 +31,6 @@ class PathsPage extends Component<{}, State> {
   }
 
   render = () => {
-      
     return (
       <div>
         <PathsModal path={ {} } title='Add modal' icon='add' reload={ this.reload }/>

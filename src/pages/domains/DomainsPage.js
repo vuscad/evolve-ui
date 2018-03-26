@@ -67,7 +67,7 @@ class DomainsPage extends Component<{}, State> {
                   { domain.name }
                 </Table.Cell>
                 <Table.Cell>
-                  { domain.tasks.map(task => JSON.stringify(task)).join(',') }
+                  { domain.tasks.map(task => JSON.stringify(task, null, 2)).join(',') }
                 </Table.Cell>
                 <Table.Cell>
                   <DomainsModal domain={ domain } title='Edit modal' icon='edit' reload={ this.reload }/>

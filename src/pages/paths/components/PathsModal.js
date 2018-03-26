@@ -80,7 +80,7 @@ class PathsModal extends Component<Props, State> {
   }
 
   closeModal = () => {
-    this.setState({ modalOpen: false })
+    this.setState({ modalOpen: false, selectedDomains: [] })
   }
 
   deleteAll = () => {

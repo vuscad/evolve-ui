@@ -66,7 +66,6 @@ class DomainsModal extends Component<Props, State> {
     if (this.props.icon === 'add') {
       await domainsService.createDomain(domain)
     } else {
-      console.log(domain)
       await domainsService.updateDomain(domain)
     }
     
@@ -84,7 +83,7 @@ class DomainsModal extends Component<Props, State> {
   }
 
   closeModal = () => {
-    this.setState({ modalOpen: false })
+    this.setState({ modalOpen: false, selectedTasks: [] })
   }
 
   deleteAll = () => {
